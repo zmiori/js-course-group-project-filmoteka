@@ -133,12 +133,16 @@ let currentPage = 1;
 let inputValue = ''
 let listenerIsActive = false
 
-export default function searchFilm(){
+export default function searchFilm() {
+ 
   const headerSearchForm = document.querySelector('.header-search-form')
+
+
   headerSearchForm.addEventListener('submit', (e) => {
-    const filmsgallery = document.querySelector('.films-gallery');
+    // e.preventDefault()
+    const filmsgallery = document.querySelector('#films-gallery');
     console.log(filmsgallery);
-    filmsgallery = innerHTML = ''
+    filmsgallery.innerHTML = ''
     currentPage =1
     const liFilmsGalleryItem = document.querySelector('.films-gallery-item')
     const listMovie = document.querySelector('.films-gallery')
@@ -301,36 +305,47 @@ const paginationContainer = document.querySelector('#pagination');
     console.dir(event.target);
     if (event.target.nodeName==='A') {
        if (event.target.attributes[1].nodeValue === 'tui-page-btn tui-next') {
-    currentPage+=1
+         currentPage += 1
          renderFilmsGallery(currentPage)
-        //  fetchApiSearch(inputValue,currentPage)
+  console.log(currentPage);
   }
   if (event.target.attributes[1].nodeValue === 'tui-page-btn tui-prev') {
     currentPage-=1
     renderFilmsGallery(currentPage)
+     console.log(currentPage);
   }
   if (event.target.attributes[1].nodeValue === 'tui-page-btn tui-first') {
     currentPage = 1
     renderFilmsGallery(currentPage)
+     console.log(currentPage);
   }
   if (event.target.attributes[1].nodeValue === 'tui-page-btn tui-last') {
     currentPage = 1000
     renderFilmsGallery(currentPage)
+     console.log(currentPage);
   }
     } else {
       paginationContainer.removeEventListener('click', handleOnPaginationContainerClick);
       paginationContainer.addEventListener('click', handleOnPaginationContainerClick);
       if (event.target.className === 'tui-ico-next') {
-         currentPage+=1
-    renderFilmsGallery(currentPage)
+        currentPage += 1
+        console.log('ssdfsdfsdf');
+        renderFilmsGallery(currentPage)
+        //    const filmsgallery = document.querySelector('#films-gallery');
+        // filmsgallery.innerHTML = ''
       }
        if (event.target.className === 'tui-ico-prev') {
          currentPage-=1
-    renderFilmsGallery(currentPage)
+         renderFilmsGallery(currentPage)
+          console.log(currentPage);
       }
       if (event.target.className === 'tui-ico-first') {
     currentPage = 1
-    renderFilmsGallery(currentPage)
+        renderFilmsGallery(currentPage)
+        const filmsgallery = document.querySelector('#films-gallery');
+        console.log('filmsgallery', filmsgallery);
+        filmsgallery.innerHTML = ''
+         console.log(currentPage);
       }
       if (event.target.className === 'tui-ico-last') {
     currentPage = 1000

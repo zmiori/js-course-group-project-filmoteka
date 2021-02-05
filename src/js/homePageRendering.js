@@ -3,6 +3,9 @@ import genres from './decodingJenres';
 import { paginateFilms, paginateOnClick } from './pagination';
 import { showSpinner, hideSpinner } from './spinner';
 import apiServise from './api-servise';
+import searchFilm from './movieSearch.js'
+
+
 
 const refs = {
   header: document.querySelector('.header-container-js'),
@@ -21,6 +24,8 @@ function renderHomePage(headerTpl) {
   updateHeaderMarkup(headerTpl);
   setPagination().catch(console.log).finally(hideSpinner);
 }
+
+
 
 function updateHeaderMarkup(headerTpl) {
   refs.header.innerHTML = '';
@@ -52,10 +57,25 @@ function renderFilmsGallery() {
   });
 }
 
+// searchFilm()
+
 function fetchTrends() {
-  return fetch(
-    `${path}/trending/movie/day?api_key=${key}&page=${apiServise.page}`,
-  ).then(response => response.json());
+let active = false
+  const qwe = document.querySelector('.header-search-form-input');
+  qwe.addEventListener('click', () => {
+    searchFilm()
+    active = true
+    hideSpinner()
+  })
+  if (active) {
+    return
+    
+  }
+  else {
+    return fetch(
+      `${path}/trending/movie/day?api_key=${key}&page=${apiServise.page}`,
+    ).then(response => response.json())
+  }
 }
 
 function updateFilmsGalleryMarkup(films) {
@@ -151,5 +171,14 @@ function libraryHandleClick(event) {
 //-------------------------------------------------------------
 
 renderHomePage(headerTemplates.homeHeader);
+
+
+const headerSearchForm = document.querySelector('.header-search-form');
+// console.log(headerSearchForm);
+
+
+
+
+
 
 export default renderFilmsGallery;

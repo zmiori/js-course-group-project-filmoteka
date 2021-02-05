@@ -116,4 +116,9 @@ function paginateOnClick(totalAmountOfFilms) {
   }
 }
 
+// const plaginPaginat = document.querySelector('tui-pagination');
+//    console.log(plaginPaginat);
+//   plaginPaginat.innerHTML = ''
+
+
 export { paginateFilms, paginateOnClick };
