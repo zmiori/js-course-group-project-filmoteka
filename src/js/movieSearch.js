@@ -122,3 +122,231 @@
 // // export default listenSearchFormSubmit;
 
 
+import refs from './refs.js'
+import decGenres from './decodingJenres.js'
+import paginationjs from 'paginationjs'
+import Pagination from 'tui-pagination';
+// import 'tui-pagination/dist/tui-pagination.css';
+
+let pageNumbers = 1
+let currentPage = 1;
+let inputValue = ''
+let listenerIsActive = false
+
+export default function searchFilm(){
+  const headerSearchForm = document.querySelector('.header-search-form')
+  headerSearchForm.addEventListener('submit', (e) => {
+    const filmsgallery = document.querySelector('.films-gallery');
+    console.log(filmsgallery);
+    filmsgallery = innerHTML = ''
+    currentPage =1
+    const liFilmsGalleryItem = document.querySelector('.films-gallery-item')
+    const listMovie = document.querySelector('.films-gallery')
+    inputValue = e.target[0].value 
+    if (liFilmsGalleryItem) {
+      listMovie.innerHTML = ''
+    }
+    e.preventDefault()
+    fetchApiSearch()
+
+    e.target[0].value = ''
+ 
+    
+    const filmsGalleryId = document.querySelector('#films-gallery');
+    filmsGalleryId.innerHTML = ''
+    console.log(filmsGalleryId);
+
+  })
+
+}
+
+function fetchApiSearch() {
+// // const startingUrl = 'https://image.tmdb.org/t/p/original'
+const path = 'https://api.themoviedb.org/3/search/movie?';
+const key = 'ffddee44025dd24685ea61d637d56d24';
+// console.log(inputValue);
+  // const query = inputValue
+//   console.log(query);
+// const API = `${path}api_key=${key}&language=en-US&query=${query}&page=${pageNumbers}&include_adult=false`
+// fetch(API)
+// .then(res => res.json())
+//   .then(data => {
+     
+    // makeNewObjectFilms(data)
+    // pagination(data)
+  
+
+    // })   
+
+function renderFilmsGallery(page) {
+  fetchTrends(page)
+    .then(({ results }) => {
+  // showMoveNotFound(films)
+      fetchGenres().then(({ genres }) => {
+        updateFilmsGalleryMarkup(results, genres);
+      });
+    })
+    .catch(console.log);
+}
+
+
+function fetchTrends(page) {
+  return fetch(
+   `${path}api_key=${key}&language=en-US&query=${inputValue}&page=${page}&include_adult=false`,
+  ).then(response => response.json());
+}
+function fetchGenres() {
+  return fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${key}`).then(response =>
+    response.json(),
+  );
+}
+function updateFilmsGalleryMarkup(films, genres) {
+  // console.log('genres: ', genres);
+ 
+  films.map(({ id, poster_path, title, release_date, genre_ids }) => {
+    const filteredGenres = genres.filter(genre => genre_ids.includes(genre.id));
+    // console.log("filteredGenres: ", filteredGenres);
+    const mapedGenres = filteredGenres.map(({ name }) => name);
+    // console.log("mapedGenres: ", mapedGenres);
+    const markup = `
+<li class="films-gallery-item" data-id="${id}">
+  <img
+    class="films-gallery-item-image"
+    src="https://image.tmdb.org/t/p/w342${poster_path}"
+    alt="«${title}» film poster"
+  >
+  <p class="films-gallery-item-title">${title.toUpperCase()}</p>
+  <p class="films-gallery-item-info">${mapedGenres.slice(0, 3).join(', ')} | ${
+      release_date.split('-')[0]
+    }</p>
+</li>
+`;
+    refs.ulListMovie.insertAdjacentHTML('beforeend', markup);
+    
+  });
+}
+
+renderFilmsGallery(currentPage);
+const options = {
+  totalItems: 20000,
+  itemsPerPage: 20,
+  visiblePages: 10,
+  page: 1,
+  centerAlign: false,
+  firstItemClassName: 'tui-first-child',
+  lastItemClassName: 'tui-last-child',
+  template: {
+    page: `<a href="#" class="tui-page-btn qwerty">{{page}}</a>`,
+    currentPage:
+      '<strong class="tui-page-btn tui-is-selected">{{page}}</strong>',
+    moveButton:
+      '<a href="#" class="tui-page-btn tui-{{type}}">' +
+      '<span class="tui-ico-{{type}}">{{type}}</span>' +
+      '</a>',
+    disabledMoveButton:
+      '<span class="tui-page-btn tui-is-disabled tui-{{type}}">' +
+      '<span class="tui-ico-{{type}}">{{type}}</span>' +
+      '</span>',
+    moreButton:
+      '<a href="#" class="tui-page-btn tui-{{type}}-is-ellip">' +
+      '<span class="tui-ico-ellip">...</span>' +
+      '</a>',
+  },
+};
+const pagination = new Pagination('pagination', options);
+const paginationContainer = document.querySelector('#pagination');
+// console.log(paginationContainer);
+  if (listenerIsActive === false) {
+    paginationContainer.addEventListener('click', handleOnPaginationContainerClick);
+    listenerIsActive = true
+    
+  } else {
+    paginationContainer.removeEventListener('click', handleOnPaginationContainerClick);
+    listenerIsActive = false
+  }
+
+  if (currentPage !== 1) {
+    paginationContainer.removeEventListener('click', handleOnPaginationContainerClick);
+    console.log("elfkztv");
+
+  }
+  function handleOnPaginationContainerClick(event) {
+    paginationContainer.removeEventListener('click', handleOnPaginationContainerClick);
+    paginationContainer.addEventListener('click', handleOnPaginationContainerClick);
+    const ulListMovie = document.querySelector('.list-movie-search-js')
+   const filmsGallery = document.querySelector('.films-gallery')
+    ulListMovie.innerHTML = '';
+    filmsGallery.innerHTML = '';
+    
+      if (event.target.nodeName === 'STRONG') {
+    return
+  }
+    
+    if (event.target.nodeName !== 'A' && event.target.nodeName !== 'SPAN') {
+      return;
+    }
+    
+    console.log('stong ЛИ ЭТО',event.target.nodeName);
+
+  const button = +event.target.textContent
+  // const button
+  if (Number.isInteger(button)) {
+    currentPage = button
+    renderFilmsGallery(currentPage)
+  }
+
+    
+  //  
+    const clickOnSpan = event.target
+    console.dir(event.target);
+    if (event.target.nodeName==='A') {
+       if (event.target.attributes[1].nodeValue === 'tui-page-btn tui-next') {
+    currentPage+=1
+         renderFilmsGallery(currentPage)
+        //  fetchApiSearch(inputValue,currentPage)
+  }
+  if (event.target.attributes[1].nodeValue === 'tui-page-btn tui-prev') {
+    currentPage-=1
+    renderFilmsGallery(currentPage)
+  }
+  if (event.target.attributes[1].nodeValue === 'tui-page-btn tui-first') {
+    currentPage = 1
+    renderFilmsGallery(currentPage)
+  }
+  if (event.target.attributes[1].nodeValue === 'tui-page-btn tui-last') {
+    currentPage = 1000
+    renderFilmsGallery(currentPage)
+  }
+    } else {
+      paginationContainer.removeEventListener('click', handleOnPaginationContainerClick);
+      paginationContainer.addEventListener('click', handleOnPaginationContainerClick);
+      if (event.target.className === 'tui-ico-next') {
+         currentPage+=1
+    renderFilmsGallery(currentPage)
+      }
+       if (event.target.className === 'tui-ico-prev') {
+         currentPage-=1
+    renderFilmsGallery(currentPage)
+      }
+      if (event.target.className === 'tui-ico-first') {
+    currentPage = 1
+    renderFilmsGallery(currentPage)
+      }
+      if (event.target.className === 'tui-ico-last') {
+    currentPage = 1000
+    renderFilmsGallery(currentPage)
+  }
+     console.log(event.target.className);
+    }
+    
+  }
+}
+
+function showMoveNotFound(data) {
+   if (data.results.length === 0) {
+        refs.headerSearchWarningShow().classList.add('header-search-warning-show')
+    }
+    else {
+       refs.headerSearchWarningShow().classList.remove('header-search-warning-show')
+    }
+}
