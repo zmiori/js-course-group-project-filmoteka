@@ -7,14 +7,14 @@ import refs from './refs';
 import { getUserLibraryFromDatabase } from './userLibrary';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyC7TRb9mfyMhzQU-yq3pDKTxl2-zaHwRmo',
-  authDomain: 'filmoteka-login.firebaseapp.com',
+  apiKey: 'AIzaSyDVSGFWIHlGY-v2KnvMPMgQARlHPSGC3zU',
+  authDomain: 'filmoteka-auth.firebaseapp.com',
   databaseURL:
-    'https://filmoteka-login-default-rtdb.europe-west1.firebasedatabase.app',
-  projectId: 'filmoteka-login',
-  storageBucket: 'filmoteka-login.appspot.com',
-  messagingSenderId: '658952655924',
-  appId: '1:658952655924:web:26304edc0b944079c1e661',
+    'https://filmoteka-auth-default-rtdb.europe-west1.firebasedatabase.app',
+  projectId: 'filmoteka-auth',
+  storageBucket: 'filmoteka-auth.appspot.com',
+  messagingSenderId: '223012353998',
+  appId: '1:223012353998:web:4593ffb7a66b0d0ec55d9f',
 };
 firebase.initializeApp(firebaseConfig);
 const ui = new firebaseui.auth.AuthUI(firebase.auth());
